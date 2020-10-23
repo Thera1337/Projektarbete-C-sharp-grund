@@ -10,7 +10,12 @@ namespace Hamnsimulering
         public Sailingboat(int weight, int speed, string id, int length)
             :base(weight, speed, 4, id)
         {
+            Size = 2;
             Length = length;
+        }
+        public override bool FindSpotAndPark(Dock[] harbour)
+        {
+            return base.FindSpotAndPark(harbour);
         }
     }
 }

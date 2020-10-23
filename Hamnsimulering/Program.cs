@@ -6,7 +6,9 @@ namespace Hamnsimulering
     {
         static void Main(string[] args)
         {
-            
+            Harbour.FillArray();
+            Harbour.AddBoats();
+            Harbour.Print();
         }
     }
 }

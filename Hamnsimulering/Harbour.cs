@@ -8,14 +8,29 @@ namespace Hamnsimulering
     {
         static Dock[] harbour = new Dock[64];
         static Random random = new Random();
-        static void FillArray()
+        static int numberOfBoatsTurnedAway;
+        public static void FillArray()
         {
             for (int i = 0; i < 64; i++)
             {
                 harbour[i] = new Dock();
             }
         }
-        static void AddBoats()
+        public static void Print()
+        {
+            for (int i = 0; i < harbour.Length; i++)
+            {
+                if (harbour[i].FirstBoat != null)
+                {
+                    Console.WriteLine($"{i} : {harbour[i].FirstBoat.ID}");
+                }
+                if (harbour[i].SecondBoat != null)
+                {
+                    Console.WriteLine($"{i} : {harbour[i].SecondBoat.ID}");
+                }
+            }
+        }
+        public static void AddBoats()
         {
             for (int i = 0; i < 5; i++)
             {
@@ -45,7 +60,10 @@ namespace Hamnsimulering
         }
         static void AddToHarbour(Boat boat)
         {
-            
+            if (!boat.FindSpotAndPark(harbour))
+            {
+                numberOfBoatsTurnedAway++;
+            }   
         }
         static Boat CreateCargoship()
         {
