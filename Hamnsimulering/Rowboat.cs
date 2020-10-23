@@ -8,7 +8,7 @@ namespace Hamnsimulering
     {
         public int NumberOfPassengers { get; set; }
         public Rowboat(int weight, int speed, string id, int numbersOfPassengers)
-            : base(weight, speed, id)
+            : base(weight, speed, 1, id)
         {
             NumberOfPassengers = numbersOfPassengers;
         }

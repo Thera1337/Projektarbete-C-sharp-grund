@@ -6,16 +6,13 @@ namespace Hamnsimulering
 {
     class Harbour
     {
-        static Boat[,] harbour = new Boat[2, 64];
+        static Dock[] harbour = new Dock[64];
         static Random random = new Random();
         static void FillArray()
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 64; i++)
             {
-                for (int j = 0; j < 64; j++)
-                {
-                    harbour[i, j] = new DummyBoat(0, 0, String.Empty);
-                }
+                harbour[i] = new Dock();
             }
         }
         static void AddBoats()
@@ -74,7 +71,6 @@ namespace Hamnsimulering
             Boat motorboat = new Motorboat(weight, speed, $"M-{id}", horsepower);
             return motorboat;
         }
-
         static Boat CreateSailingboat()
         {
             int weight = random.Next(800, 6000 + 1);
@@ -87,8 +83,6 @@ namespace Hamnsimulering
             Boat sailingboat = new Sailingboat(weight, speed, $"S-{id}", length);
             return sailingboat;
         }
-
-
         static Boat CreateRowboat()
         {
             int weight = random.Next(100, 300 + 1);

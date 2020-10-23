@@ -8,7 +8,7 @@ namespace Hamnsimulering
     {
         public int Length { get; set; }
         public Sailingboat(int weight, int speed, string id, int length)
-            :base(weight, speed, id)
+            :base(weight, speed, 4, id)
         {
             Length = length;
         }

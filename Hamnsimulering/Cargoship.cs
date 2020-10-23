@@ -8,7 +8,7 @@ namespace Hamnsimulering
     {
         public int NumberOfContainers { get; set; }
         public Cargoship(int weight, int speed, string id, int numberOfContainers)
-            :base(weight, speed, id)
+            :base(weight, speed, 6, id)
         {
             NumberOfContainers = numberOfContainers;
         }

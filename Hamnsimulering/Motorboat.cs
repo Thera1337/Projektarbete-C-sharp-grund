@@ -8,7 +8,7 @@ namespace Hamnsimulering
     {
         public int HorsePower { get; set; }
         public Motorboat(int weight, int speed, string id, int horsePower)
-            :base(weight, speed, id)
+            :base(weight, speed, 3, id)
         {
             HorsePower = horsePower;
         }
