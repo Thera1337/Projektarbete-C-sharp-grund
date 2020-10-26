@@ -62,5 +62,11 @@ namespace Hamnsimulering
                 i++;
             }
         }
+        public virtual string Print()
+        {
+            string printString = "Properties";
+
+            return printString;
+        }
     }
 }

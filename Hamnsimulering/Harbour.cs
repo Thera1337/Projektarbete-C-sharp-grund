@@ -21,21 +21,26 @@ namespace Hamnsimulering
             int count = 1;
             foreach (var item in harbour)
             {
-                if (item.Status != Dock.IsFull.Free)
+                Console.WriteLine("");
+                if (item.FirstBoat != null)
                 {
-                    if (item.FirstBoat != null)
-                    {
-                        Console.WriteLine($"{count} : {item.FirstBoat.ID}");
-                    }
-                    if (item.SecondBoat != null)
-                    {
-                        Console.WriteLine($"{count} : {item.SecondBoat.ID}");
-                    }
-                    if (item.Status is Dock.IsFull.Occupied && item.FirstBoat is null)
-                    {
-                        Console.WriteLine($"{count} : Upptagen");
-                    }
+                    Console.WriteLine($"{count} : {item.FirstBoat.Print()}");
                 }
+                //if (item.Status != Dock.IsFull.Free)
+                //{
+                //    if (item.FirstBoat != null)
+                //    {
+                //        Console.WriteLine($"{count} : {item.FirstBoat.ID}");
+                //    }
+                //    if (item.SecondBoat != null)
+                //    {
+                //        Console.WriteLine($"{count} : {item.SecondBoat.ID}");
+                //    }
+                //    if (item.Status is Dock.IsFull.Occupied && item.FirstBoat is null)
+                //    {
+                //        Console.WriteLine($"{count} : Upptagen");
+                //    }
+                //}
                 count++;
             }
         }
