@@ -66,5 +66,9 @@
                 docks[i].Status = Dock.IsFull.OneRowboat;
             }
         }
+        public override string Print()
+        {
+            return base.Print() + $"{NumberOfPassengers} passagerare";
+        }
     }
 }

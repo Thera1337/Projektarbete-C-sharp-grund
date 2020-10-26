@@ -64,7 +64,7 @@ namespace Hamnsimulering
         }
         public virtual string Print()
         {
-            string printString = "Properties";
+            string printString = $"{ID}\t{Weight}kg\t{Speed} knop\t\t{Size}\t\t";
 
             return printString;
         }

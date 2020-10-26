@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hamnsimulering
 {
@@ -19,28 +17,17 @@ namespace Hamnsimulering
         public static void Print()
         {
             int count = 1;
+            Console.WriteLine("Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap");
             foreach (var item in harbour)
             {
-                Console.WriteLine("");
                 if (item.FirstBoat != null)
                 {
-                    Console.WriteLine($"{count} : {item.FirstBoat.Print()}");
+                    Console.WriteLine($"{count} - {count + item.FirstBoat.Size -1}: {item.FirstBoat.Print()}");
                 }
-                //if (item.Status != Dock.IsFull.Free)
-                //{
-                //    if (item.FirstBoat != null)
-                //    {
-                //        Console.WriteLine($"{count} : {item.FirstBoat.ID}");
-                //    }
-                //    if (item.SecondBoat != null)
-                //    {
-                //        Console.WriteLine($"{count} : {item.SecondBoat.ID}");
-                //    }
-                //    if (item.Status is Dock.IsFull.Occupied && item.FirstBoat is null)
-                //    {
-                //        Console.WriteLine($"{count} : Upptagen");
-                //    }
-                //}
+                if (item.SecondBoat != null)
+                {
+                    Console.WriteLine($"{count} : \t{item.SecondBoat.Print()}");
+                }
                 count++;
             }
         }
@@ -77,7 +64,7 @@ namespace Hamnsimulering
             if (!boat.FindSpotAndPark(harbour))
             {
                 numberOfBoatsTurnedAway++;
-            }   
+            }
         }
         public static void DepartureCountDown()
         {
@@ -135,7 +122,7 @@ namespace Hamnsimulering
         {
             int weight = random.Next(800, 6000 + 1);
             int speed = random.Next(1, 12 + 1);
-            int length = random.Next(10,60+1);
+            int length = random.Next(10, 60 + 1);
             string id = String.Empty;
             id += (char)random.Next('A', 'Z');
             id += (char)random.Next('A', 'Z');

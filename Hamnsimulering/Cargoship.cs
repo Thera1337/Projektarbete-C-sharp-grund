@@ -17,5 +17,9 @@ namespace Hamnsimulering
         {
             return base.FindSpotAndPark(harbour);
         }
+        public override string Print()
+        {
+            return base.Print() + $"{NumberOfContainers}st kontainrar";
+        }
     }
 }
