@@ -7,8 +7,16 @@ namespace Hamnsimulering
         static void Main(string[] args)
         {
             Harbour.FillArray();
-            Harbour.AddBoats();
-            Harbour.Print();
+            while (true)
+            {
+                //Console.SetCursorPosition(0, 0);
+                Console.Clear();
+                Harbour.Departure();
+                Harbour.AddBoats();
+                Harbour.DepartureCountDown();
+                Harbour.Print();
+                Console.ReadLine();
+            }
         }
     }
 }

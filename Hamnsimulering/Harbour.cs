@@ -18,16 +18,25 @@ namespace Hamnsimulering
         }
         public static void Print()
         {
-            for (int i = 0; i < harbour.Length; i++)
+            int count = 1;
+            foreach (var item in harbour)
             {
-                if (harbour[i].FirstBoat != null)
+                if (item.Status != Dock.IsFull.Free)
                 {
-                    Console.WriteLine($"{i} : {harbour[i].FirstBoat.ID}");
+                    if (item.FirstBoat != null)
+                    {
+                        Console.WriteLine($"{count} : {item.FirstBoat.ID}");
+                    }
+                    if (item.SecondBoat != null)
+                    {
+                        Console.WriteLine($"{count} : {item.SecondBoat.ID}");
+                    }
+                    if (item.Status is Dock.IsFull.Occupied && item.FirstBoat is null)
+                    {
+                        Console.WriteLine($"{count} : Upptagen");
+                    }
                 }
-                if (harbour[i].SecondBoat != null)
-                {
-                    Console.WriteLine($"{i} : {harbour[i].SecondBoat.ID}");
-                }
+                count++;
             }
         }
         public static void AddBoats()
@@ -64,6 +73,34 @@ namespace Hamnsimulering
             {
                 numberOfBoatsTurnedAway++;
             }   
+        }
+        public static void DepartureCountDown()
+        {
+            foreach (var item in harbour)
+            {
+                if (item.FirstBoat != null)
+                {
+                    item.FirstBoat.DaysTillDeparture--;
+                }
+                if (item.SecondBoat != null)
+                {
+                    item.SecondBoat.DaysTillDeparture--;
+                }
+            }
+        }
+        public static void Departure()
+        {
+            for (int i = 0; i < harbour.Length; i++)
+            {
+                if (harbour[i].SecondBoat != null && harbour[i].SecondBoat.DaysTillDeparture is 0)
+                {
+                    harbour[i].SecondBoat.Departure(harbour, i);
+                }
+                if (harbour[i].FirstBoat != null && harbour[i].FirstBoat.DaysTillDeparture is 0)
+                {
+                    harbour[i].FirstBoat.Departure(harbour, i);
+                }
+            }
         }
         static Boat CreateCargoship()
         {

@@ -40,9 +40,9 @@ namespace Hamnsimulering
             if (i<harbour.Length)
             {
                 int spot = (i + 1) - Size;
+                harbour[spot].FirstBoat = this;
                 for (int j = 0; j < Size; j++)
                 {
-                    harbour[spot].FirstBoat = this;
                     harbour[spot].Status = Dock.IsFull.Occupied;
                     spot++;
                 }
@@ -51,6 +51,15 @@ namespace Hamnsimulering
             else
             {
                 return false;
+            }
+        }
+        public virtual void Departure(Dock[] docks, int i)
+        {
+            docks[i].FirstBoat = null;
+            for (int j = 0; j < Size; j++)
+            {
+                docks[i].Status = Dock.IsFull.Free;
+                i++;
             }
         }
     }

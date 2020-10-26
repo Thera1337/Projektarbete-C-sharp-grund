@@ -54,5 +54,17 @@
                 return false;
             }
         }
+        public override void Departure(Dock[] docks, int i)
+        {
+            if (docks[i].FirstBoat == this)
+            {
+                base.Departure(docks, i);
+            }
+            else
+            {
+                docks[i].SecondBoat = null;
+                docks[i].Status = Dock.IsFull.OneRowboat;
+            }
+        }
     }
 }
