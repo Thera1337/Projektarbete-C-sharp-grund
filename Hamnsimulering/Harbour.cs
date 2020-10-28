@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Hamnsimulering
@@ -20,6 +21,9 @@ namespace Hamnsimulering
         public static void Print()
         {
             int count = 1;
+            Console.WriteLine("Statistik:");
+            Console.WriteLine($"Total vikt i hamnen: {TotalWeightInHarbour()}kg");
+            Console.WriteLine($"Medelhastighet i hamnen: {AverageSpeedInHarbour():N2}km/h");
             Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal avvisade båtar: {numberOfBoatsTurnedAway}");
             foreach (var item in harbour)
             {
@@ -37,6 +41,36 @@ namespace Hamnsimulering
                 }
                 count++;
             }
+        }
+        private static double AverageSpeedInHarbour()
+        {
+            var q1 = harbour
+                .Where(q => q.FirstBoat != null)
+                .Select(q => q.FirstBoat.GetKmH());
+
+            var q2 = harbour
+                .Where(q => q.SecondBoat != null)
+                .Select(q => q.SecondBoat.GetKmH());
+
+            var q3 = q1
+                .Concat(q2)
+                .Average();
+
+            return q3;
+        }
+        private static int TotalWeightInHarbour()
+        {
+            var q1 = harbour
+                .Where(q => q.FirstBoat != null)
+                .Select(q => q.FirstBoat.Weight)
+                .Sum();
+
+            var q2 = harbour
+                .Where(q => q.SecondBoat != null)
+                .Select(q => q.SecondBoat.Weight)
+                .Sum();
+
+            return q1 + q2;
         }
         public static void WriteToFile()
         {

@@ -69,7 +69,7 @@ namespace Hamnsimulering
                 i++;
             }
         }
-        private double GetKmH()
+        public double GetKmH()
         {
             return Speed * 1.852;
         }
