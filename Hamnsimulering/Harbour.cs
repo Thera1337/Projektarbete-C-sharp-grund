@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Hamnsimulering
 {
@@ -17,9 +20,13 @@ namespace Hamnsimulering
         public static void Print()
         {
             int count = 1;
-            Console.WriteLine("Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap");
+            Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal avvisade båtar: {numberOfBoatsTurnedAway}");
             foreach (var item in harbour)
             {
+                if (item.Status is Dock.IsFull.Free)
+                {
+                    Console.WriteLine($"{count}: tomt");
+                }
                 if (item.FirstBoat != null)
                 {
                     Console.WriteLine($"{count} - {count + item.FirstBoat.Size -1}: {item.FirstBoat.Print()}");
@@ -30,6 +37,62 @@ namespace Hamnsimulering
                 }
                 count++;
             }
+        }
+        public static void WriteToFile()
+        {
+            StreamWriter sw = new StreamWriter("HarbourHistory.txt", false);
+            for (int i = 0; i < harbour.Length; i++)
+            {
+                if (harbour[i].FirstBoat != null)
+                {
+                    sw.WriteLine($"{i}\t{harbour[i].FirstBoat.SaveHistory()}");
+                }
+                if (harbour[i].SecondBoat != null)
+                {
+                    sw.WriteLine($"{i}\t{harbour[i].SecondBoat.SaveHistory()}");
+                }
+            }
+            sw.Close();
+        }
+        public static void ImportHarbourHistory()
+        {
+            foreach (string line in File.ReadAllLines("HarbourHistory.txt", Encoding.UTF8))
+            {
+                //Läser in [0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]: tomt, [5]:storlek, [6]: tomt, [7]:Unik prop
+                string[] props = line.Split('\t');
+                
+                //Kopierar över alla element som inte är tomma till q1 
+                var q1 = props
+                    .Where(q => q != string.Empty).ToArray();
+
+                //Skapar båt baserat på informationen från filen sparad i q1
+                //[0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop 
+                for (int i = 0; i < q1.Length; i++)
+                {
+                    switch (q1[1].First())
+                    {
+                        case 'R':
+                            Boat rowboat = new Rowboat(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
+                            rowboat.Park(harbour, int.Parse(q1[0]));
+                            break;
+                        case 'M':
+                            Boat motorboat = new Motorboat(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
+                            motorboat.Park(harbour, int.Parse(q1[0]));
+                            break;
+                        case 'S':
+                            Boat sailingboat = new Sailingboat(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
+                            sailingboat.Park(harbour, int.Parse(q1[0]));
+                            break;
+                        case 'L':
+                            Boat cargoship = new Cargoship(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
+                            cargoship.Park(harbour, int.Parse(q1[0]));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            //string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "Filnamn");
         }
         public static void AddBoats()
         {

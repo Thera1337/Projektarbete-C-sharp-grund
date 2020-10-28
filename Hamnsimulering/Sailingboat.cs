@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Hamnsimulering
@@ -17,9 +18,17 @@ namespace Hamnsimulering
         {
             return base.FindSpotAndPark(harbour);
         }
+        private double GetMeter()
+        {
+            return Length * 0.3048;
+        }
         public override string Print()
         {
-            return base.Print() + $"{Length} ft";
+            return base.Print() + $"{GetMeter():N2} m\t\tDagar kvar i hamn: {DaysTillDeparture}";
+        }
+        public override string SaveHistory()
+        {
+            return base.SaveHistory() + $"{Length}";
         }
     }
 }

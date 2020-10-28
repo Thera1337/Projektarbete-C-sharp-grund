@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Hamnsimulering
@@ -40,12 +41,7 @@ namespace Hamnsimulering
             if (i<harbour.Length)
             {
                 int spot = (i + 1) - Size;
-                harbour[spot].FirstBoat = this;
-                for (int j = 0; j < Size; j++)
-                {
-                    harbour[spot].Status = Dock.IsFull.Occupied;
-                    spot++;
-                }
+                Park(harbour, spot);
                 return true;
             }
             else
@@ -53,6 +49,17 @@ namespace Hamnsimulering
                 return false;
             }
         }
+
+        public void Park(Dock[] harbour, int spot)
+        {
+            harbour[spot].FirstBoat = this;
+            for (int j = 0; j < Size; j++)
+            {
+                harbour[spot].Status = Dock.IsFull.Occupied;
+                spot++;
+            }
+        }
+
         public virtual void Departure(Dock[] docks, int i)
         {
             docks[i].FirstBoat = null;
@@ -62,9 +69,19 @@ namespace Hamnsimulering
                 i++;
             }
         }
+        private double GetKmH()
+        {
+            return Speed * 1.852;
+        }
         public virtual string Print()
         {
-            string printString = $"{ID}\t{Weight}kg\t{Speed} knop\t\t{Size}\t\t";
+            string printString = $"{ID}\t{Weight}kg\t{GetKmH():N2} km/h\t{Size}\t\t";
+
+            return printString;
+        }
+        public virtual string SaveHistory()
+        {
+            string printString = $"{ID}\t{Weight}\t{Speed}\t\t{Size}\t\t";
 
             return printString;
         }

@@ -33,20 +33,7 @@
             if (i < harbour.Length)
             {
                 int spot = (i + 1) - Size;
-                for (int j = 0; j < Size; j++)
-                {
-                    if (harbour[spot].Status is Dock.IsFull.OneRowboat)
-                    {
-                        harbour[spot].SecondBoat = this;
-                        harbour[spot].Status = Dock.IsFull.Occupied;
-                    }
-                    else
-                    {
-                        harbour[spot].FirstBoat = this;
-                        harbour[spot].Status = Dock.IsFull.OneRowboat;
-                    }
-                    spot++;
-                }
+                Park(harbour, spot);
                 return true;
             }
             else
@@ -54,6 +41,25 @@
                 return false;
             }
         }
+
+        public new void Park(Dock[] harbour, int spot)
+        {
+            for (int j = 0; j < Size; j++)
+            {
+                if (harbour[spot].Status is Dock.IsFull.OneRowboat)
+                {
+                    harbour[spot].SecondBoat = this;
+                    harbour[spot].Status = Dock.IsFull.Occupied;
+                }
+                else
+                {
+                    harbour[spot].FirstBoat = this;
+                    harbour[spot].Status = Dock.IsFull.OneRowboat;
+                }
+                spot++;
+            }
+        }
+
         public override void Departure(Dock[] docks, int i)
         {
             if (docks[i].FirstBoat == this)
@@ -68,7 +74,11 @@
         }
         public override string Print()
         {
-            return base.Print() + $"{NumberOfPassengers} passagerare";
+            return base.Print() + $"{NumberOfPassengers} passagerare\tDagar kvar i hamn: {DaysTillDeparture}";
+        }
+        public override string SaveHistory()
+        {
+            return base.SaveHistory() + $"{NumberOfPassengers}";
         }
     }
 }

@@ -19,7 +19,11 @@ namespace Hamnsimulering
         }
         public override string Print()
         {
-            return base.Print() + $"{NumberOfContainers}st kontainrar";
+            return base.Print() + $"{NumberOfContainers} kontainrar\tDagar kvar i hamn: {DaysTillDeparture}";
+        }
+        public override string SaveHistory()
+        {
+            return base.SaveHistory() + $"{NumberOfContainers}";
         }
     }
 }
