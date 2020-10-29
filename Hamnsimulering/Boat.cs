@@ -81,7 +81,7 @@ namespace Hamnsimulering
         }
         public virtual string SaveHistory()
         {
-            string printString = $"{ID}\t{Weight}\t{Speed}\t\t{Size}\t\t";
+            string printString = $"{ID}\t{Weight}\t{Speed}\t{Size}\t";
 
             return printString;
         }

@@ -22,9 +22,10 @@ namespace Hamnsimulering
         {
             int count = 1;
             Console.WriteLine("Statistik:");
+            Console.WriteLine($"Antal båtar: {NumberOfBoats('R')}Roddbåtar, {NumberOfBoats('M')}Motorbåtar, {NumberOfBoats('S')}Segelbåtar, {NumberOfBoats('L')}Lastskepp");
             Console.WriteLine($"Total vikt i hamnen: {TotalWeightInHarbour()}kg");
             Console.WriteLine($"Medelhastighet i hamnen: {AverageSpeedInHarbour():N2}km/h");
-            Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal avvisade båtar: {numberOfBoatsTurnedAway}");
+            Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal lediga platser: {NumberOfEmptySpots()} Antal avvisade båtar: {numberOfBoatsTurnedAway}");
             foreach (var item in harbour)
             {
                 if (item.Status is Dock.IsFull.Free)
@@ -41,6 +42,26 @@ namespace Hamnsimulering
                 }
                 count++;
             }
+        }
+        private static int NumberOfBoats(char firstIdChar)
+        {
+            var q1 = harbour
+                .Where(q => q.FirstBoat != null)
+                .Where(q => q.FirstBoat.ID.First() == firstIdChar);
+
+            var q2 = harbour
+                .Where(q => q.SecondBoat != null)
+                .Where(q => q.SecondBoat.ID.First() == firstIdChar);
+
+            return q1.Count() + q2.Count();
+        }
+        private static int NumberOfEmptySpots()
+        {
+            var q1 = harbour
+                .Where(q => q.Status == Dock.IsFull.Free)
+                .Count();
+
+            return q1;
         }
         private static double AverageSpeedInHarbour()
         {
@@ -92,34 +113,29 @@ namespace Hamnsimulering
         {
             foreach (string line in File.ReadAllLines("HarbourHistory.txt", Encoding.UTF8))
             {
-                //Läser in [0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]: tomt, [5]:storlek, [6]: tomt, [7]:Unik prop
+                //Läser in [0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop
                 string[] props = line.Split('\t');
                 
-                //Kopierar över alla element som inte är tomma till q1 
-                var q1 = props
-                    .Where(q => q != string.Empty).ToArray();
-
-                //Skapar båt baserat på informationen från filen sparad i q1
                 //[0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop 
-                for (int i = 0; i < q1.Length; i++)
+                for (int i = 0; i < props.Length; i++)
                 {
-                    switch (q1[1].First())
+                    switch (props[1].First())
                     {
                         case 'R':
-                            Boat rowboat = new Rowboat(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
-                            rowboat.Park(harbour, int.Parse(q1[0]));
+                            Boat rowboat = new Rowboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                            rowboat.Park(harbour, int.Parse(props[0]));
                             break;
                         case 'M':
-                            Boat motorboat = new Motorboat(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
-                            motorboat.Park(harbour, int.Parse(q1[0]));
+                            Boat motorboat = new Motorboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                            motorboat.Park(harbour, int.Parse(props[0]));
                             break;
                         case 'S':
-                            Boat sailingboat = new Sailingboat(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
-                            sailingboat.Park(harbour, int.Parse(q1[0]));
+                            Boat sailingboat = new Sailingboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                            sailingboat.Park(harbour, int.Parse(props[0]));
                             break;
                         case 'L':
-                            Boat cargoship = new Cargoship(int.Parse(q1[2]), int.Parse(q1[3]), q1[1], int.Parse(q1[5]));
-                            cargoship.Park(harbour, int.Parse(q1[0]));
+                            Boat cargoship = new Cargoship(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                            cargoship.Park(harbour, int.Parse(props[0]));
                             break;
                         default:
                             break;
