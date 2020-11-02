@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Hamnsimulering
@@ -11,6 +10,7 @@ namespace Hamnsimulering
         static Dock[] harbour = new Dock[64];
         static Random random = new Random();
         static int numberOfBoatsTurnedAway;
+        static int CurrentDay;
         public static void FillArray()
         {
             for (int i = 0; i < 64; i++)
@@ -22,9 +22,10 @@ namespace Hamnsimulering
         {
             int count = 1;
             Console.WriteLine("Statistik:");
-            Console.WriteLine($"Antal båtar: {NumberOfBoats('R')}Roddbåtar, {NumberOfBoats('M')}Motorbåtar, {NumberOfBoats('S')}Segelbåtar, {NumberOfBoats('L')}Lastskepp");
+            Console.WriteLine($"Antal båtar: {NumberOfBoats('R')} Roddbåtar, {NumberOfBoats('M')} Motorbåtar, {NumberOfBoats('S')} Segelbåtar, {NumberOfBoats('L')} Lastskepp");
             Console.WriteLine($"Total vikt i hamnen: {TotalWeightInHarbour()}kg");
             Console.WriteLine($"Medelhastighet i hamnen: {AverageSpeedInHarbour():N2}km/h");
+            Console.WriteLine($"Dag: {CurrentDay}");
             Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal lediga platser: {NumberOfEmptySpots()} Antal avvisade båtar: {numberOfBoatsTurnedAway}");
             foreach (var item in harbour)
             {
@@ -34,7 +35,7 @@ namespace Hamnsimulering
                 }
                 if (item.FirstBoat != null)
                 {
-                    Console.WriteLine($"{count} - {count + item.FirstBoat.Size -1}: {item.FirstBoat.Print()}");
+                    Console.WriteLine($"{count} - {count + item.FirstBoat.Size - 1}: {item.FirstBoat.Print()}");
                 }
                 if (item.SecondBoat != null)
                 {
@@ -42,6 +43,16 @@ namespace Hamnsimulering
                 }
                 count++;
             }
+        }
+
+        internal static void SetNewDate()
+        {
+            CurrentDay++;
+        }
+
+        internal static int GetCurrentDay()
+        {
+            return CurrentDay;
         }
         private static int NumberOfBoats(char firstIdChar)
         {
@@ -96,6 +107,7 @@ namespace Hamnsimulering
         public static void WriteToFile()
         {
             StreamWriter sw = new StreamWriter("HarbourHistory.txt", false);
+            sw.WriteLine($"{CurrentDay}\t{numberOfBoatsTurnedAway}");
             for (int i = 0; i < harbour.Length; i++)
             {
                 if (harbour[i].FirstBoat != null)
@@ -109,36 +121,55 @@ namespace Hamnsimulering
             }
             sw.Close();
         }
+        //internal static void SaveDate(int i)
+        //{
+        //    StreamWriter sw = new StreamWriter("HarbourHistory.txt", false);
+        //    sw.WriteLine(i);
+        //    sw.Close();
+        //}
         public static void ImportHarbourHistory()
         {
-            foreach (string line in File.ReadAllLines("HarbourHistory.txt", Encoding.UTF8))
+            if (new FileInfo("HarbourHistory.txt").Length > 0)
             {
-                //Läser in [0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop
-                string[] props = line.Split('\t');
-                
-                //[0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop 
-                for (int i = 0; i < props.Length; i++)
+
+                foreach (string line in File.ReadAllLines("HarbourHistory.txt", Encoding.UTF8))
                 {
-                    switch (props[1].First())
+                    //Läser in [0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop
+                    string[] props = line.Split('\t');
+
+                    //[0]: position, [1]:ID, [2]:Vikt, [3]:hastighet, [4]:storlek, [5]:Unik prop 
+                    for (int i = 0; i < props.Length; i++)
                     {
-                        case 'R':
-                            Boat rowboat = new Rowboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
-                            rowboat.Park(harbour, int.Parse(props[0]));
-                            break;
-                        case 'M':
-                            Boat motorboat = new Motorboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
-                            motorboat.Park(harbour, int.Parse(props[0]));
-                            break;
-                        case 'S':
-                            Boat sailingboat = new Sailingboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
-                            sailingboat.Park(harbour, int.Parse(props[0]));
-                            break;
-                        case 'L':
-                            Boat cargoship = new Cargoship(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
-                            cargoship.Park(harbour, int.Parse(props[0]));
-                            break;
-                        default:
-                            break;
+                        if (props.Length == 2)
+                        {
+                            CurrentDay = int.Parse(props[0]);
+                            numberOfBoatsTurnedAway = int.Parse(props[1]);
+                        }
+                        else
+                        {
+
+                            switch (props[1].First())
+                            {
+                                case 'R':
+                                    Boat rowboat = new Rowboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    rowboat.Park(harbour, int.Parse(props[0]));
+                                    break;
+                                case 'M':
+                                    Boat motorboat = new Motorboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    motorboat.Park(harbour, int.Parse(props[0]));
+                                    break;
+                                case 'S':
+                                    Boat sailingboat = new Sailingboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    sailingboat.Park(harbour, int.Parse(props[0]));
+                                    break;
+                                case 'L':
+                                    Boat cargoship = new Cargoship(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    cargoship.Park(harbour, int.Parse(props[0]));
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                     }
                 }
             }
