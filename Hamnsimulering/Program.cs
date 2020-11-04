@@ -7,10 +7,11 @@ namespace Hamnsimulering
     {
         static void Main(string[] args)
         {
-            int i = Harbour.GetCurrentDay();
             Harbour.FillArray();
             Harbour.ImportHarbourHistory();
-            while (i < 365)
+            Harbour.SetNumberOfBoatsPerDay();
+
+            while (Harbour.GetCurrentDay() < 365)
             {
                 //Console.SetCursorPosition(0, 0);
                 Console.Clear();
@@ -19,7 +20,6 @@ namespace Hamnsimulering
                 Harbour.Print();
                 Harbour.DepartureCountDown();
                 Harbour.WriteToFile();
-                //Harbour.SaveDate(i);
                 //Console.ReadLine();
                 Thread.Sleep(5000);
 

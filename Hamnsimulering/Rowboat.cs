@@ -74,11 +74,11 @@
         }
         public override string Print()
         {
-            return base.Print() + $"{NumberOfPassengers} passagerare\tDagar kvar i hamn: {DaysTillDeparture}";
+            return base.Print() + $"{NumberOfPassengers} passagerare\t\tDagar kvar i hamn: {DaysTillDeparture}";
         }
         public override string SaveHistory()
         {
-            return base.SaveHistory() + $"{NumberOfPassengers}";
+            return base.SaveHistory() + $"{NumberOfPassengers}\t{DaysTillDeparture}";
         }
     }
 }

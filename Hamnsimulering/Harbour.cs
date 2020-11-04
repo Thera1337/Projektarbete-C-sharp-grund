@@ -9,14 +9,20 @@ namespace Hamnsimulering
     {
         static Dock[] harbour = new Dock[64];
         static Random random = new Random();
-        static int numberOfBoatsTurnedAway;
+        static int NumberOfBoatsTurnedAway;
         static int CurrentDay;
+        static int NumberOfBoatsPerDay;
         public static void FillArray()
         {
             for (int i = 0; i < 64; i++)
             {
                 harbour[i] = new Dock();
             }
+        }
+        public static void SetNumberOfBoatsPerDay()
+        {
+            Console.WriteLine("Ange antalet båtar som anländer varje dag: ");
+            NumberOfBoatsPerDay = int.Parse(Console.ReadLine());
         }
         public static void Print()
         {
@@ -26,7 +32,7 @@ namespace Hamnsimulering
             Console.WriteLine($"Total vikt i hamnen: {TotalWeightInHarbour()}kg");
             Console.WriteLine($"Medelhastighet i hamnen: {AverageSpeedInHarbour():N2}km/h");
             Console.WriteLine($"Dag: {CurrentDay}");
-            Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal lediga platser: {NumberOfEmptySpots()} Antal avvisade båtar: {numberOfBoatsTurnedAway}");
+            Console.WriteLine($"Plats ID\tVikt\tHastighet\tAntal platser\tUnik egenskap\t\t Antal lediga platser: {NumberOfEmptySpots()} Antal avvisade båtar: {NumberOfBoatsTurnedAway}");
             foreach (var item in harbour)
             {
                 if (item.Status is Dock.IsFull.Free)
@@ -107,7 +113,7 @@ namespace Hamnsimulering
         public static void WriteToFile()
         {
             StreamWriter sw = new StreamWriter("HarbourHistory.txt", false);
-            sw.WriteLine($"{CurrentDay}\t{numberOfBoatsTurnedAway}");
+            sw.WriteLine($"{CurrentDay}\t{NumberOfBoatsTurnedAway}");
             for (int i = 0; i < harbour.Length; i++)
             {
                 if (harbour[i].FirstBoat != null)
@@ -121,12 +127,6 @@ namespace Hamnsimulering
             }
             sw.Close();
         }
-        //internal static void SaveDate(int i)
-        //{
-        //    StreamWriter sw = new StreamWriter("HarbourHistory.txt", false);
-        //    sw.WriteLine(i);
-        //    sw.Close();
-        //}
         public static void ImportHarbourHistory()
         {
             if (new FileInfo("HarbourHistory.txt").Length > 0)
@@ -143,7 +143,7 @@ namespace Hamnsimulering
                         if (props.Length == 2)
                         {
                             CurrentDay = int.Parse(props[0]);
-                            numberOfBoatsTurnedAway = int.Parse(props[1]);
+                            NumberOfBoatsTurnedAway = int.Parse(props[1]);
                         }
                         else
                         {
@@ -152,18 +152,22 @@ namespace Hamnsimulering
                             {
                                 case 'R':
                                     Boat rowboat = new Rowboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    rowboat.DaysTillDeparture = int.Parse(props[6]);
                                     rowboat.Park(harbour, int.Parse(props[0]));
                                     break;
                                 case 'M':
                                     Boat motorboat = new Motorboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    motorboat.DaysTillDeparture = int.Parse(props[6]);
                                     motorboat.Park(harbour, int.Parse(props[0]));
                                     break;
                                 case 'S':
                                     Boat sailingboat = new Sailingboat(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    sailingboat.DaysTillDeparture = int.Parse(props[6]);
                                     sailingboat.Park(harbour, int.Parse(props[0]));
                                     break;
                                 case 'L':
                                     Boat cargoship = new Cargoship(int.Parse(props[2]), int.Parse(props[3]), props[1], int.Parse(props[5]));
+                                    cargoship.DaysTillDeparture = int.Parse(props[6]);
                                     cargoship.Park(harbour, int.Parse(props[0]));
                                     break;
                                 default:
@@ -177,7 +181,7 @@ namespace Hamnsimulering
         }
         public static void AddBoats()
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < NumberOfBoatsPerDay; i++)
             {
                 int boatType = random.Next(0, 3 + 1);
                 switch (boatType)
@@ -207,7 +211,7 @@ namespace Hamnsimulering
         {
             if (!boat.FindSpotAndPark(harbour))
             {
-                numberOfBoatsTurnedAway++;
+                NumberOfBoatsTurnedAway++;
             }
         }
         public static void DepartureCountDown()

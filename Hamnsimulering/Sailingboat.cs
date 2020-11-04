@@ -24,11 +24,11 @@ namespace Hamnsimulering
         }
         public override string Print()
         {
-            return base.Print() + $"{GetMeter():N2} m\t\tDagar kvar i hamn: {DaysTillDeparture}";
+            return base.Print() + $"{GetMeter():N2} m\t\t\tDagar kvar i hamn: {DaysTillDeparture}";
         }
         public override string SaveHistory()
         {
-            return base.SaveHistory() + $"{Length}";
+            return base.SaveHistory() + $"{Length}\t{DaysTillDeparture}";
         }
     }
 }

@@ -19,11 +19,11 @@ namespace Hamnsimulering
         }
         public override string Print()
         {
-            return base.Print() + $"{HorsePower} hp\t\tDagar kvar i hamn: {DaysTillDeparture}";
+            return base.Print() + $"{HorsePower} hp\t\t\tDagar kvar i hamn: {DaysTillDeparture}";
         }
         public override string SaveHistory()
         {
-            return base.SaveHistory() + $"{HorsePower}";
+            return base.SaveHistory() + $"{HorsePower}\t{DaysTillDeparture}";
         }
     }
 }
