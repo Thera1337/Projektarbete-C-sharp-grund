@@ -129,7 +129,7 @@ namespace Hamnsimulering
         }
         public static void ImportHarbourHistory()
         {
-            if (new FileInfo("HarbourHistory.txt").Length > 0)
+            if (File.Exists("HarbourHistory.txt") && new FileInfo("HarbourHistory.txt").Length > 0)
             {
 
                 foreach (string line in File.ReadAllLines("HarbourHistory.txt", Encoding.UTF8))
